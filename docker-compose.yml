@@ -1,0 +1,91 @@
+services:
+  weba:       
+    image: gilbertg01/practica-6:latest
+    env_file: 
+      - .env
+    environment:    
+      - NOMBRE_APP=$AMBIENTE
+      - server.port=8080
+    expose:
+      - 8080
+    restart: always
+    networks:   
+      - red-app
+    depends_on:  
+      practica-6-db:
+        condition: service_healthy
+
+  webb: 
+    image: gilbertg01/practica-6:latest
+    env_file: 
+      - .env
+    environment:
+      - NOMBRE_APP=$AMBIENTE
+      - server.port=8081
+    expose:
+      - 8081
+    restart: always
+    networks: 
+      - red-app
+    depends_on:
+      practica-6-db:
+        condition: service_healthy
+
+  webc: 
+    image: gilbertg01/practica-6:latest
+    env_file: 
+      - .env
+    environment: 
+      - NOMBRE_APP=$AMBIENTE
+      - server.port=8082
+    expose:
+      - 8082
+    restart: always
+    networks: 
+      - red-app
+    depends_on: 
+      practica-6-db:
+        condition: service_healthy
+
+  practica-6-db:
+    image: mysql:5.7.26
+    ports:
+      - ${PUERTO_DB}:${DB_PORT}
+    env_file:
+      - .env
+    environment:
+      - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
+      - MYSQL_USER=$DB_USER
+      - MYSQL_DATABASE=$DB_NAME
+    volumes:   
+      - mi-volumen-bd:${DB_UBI}
+    networks:
+      - red-app
+    healthcheck:
+      test: [ "CMD", 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'db', '-p$$MYSQL_ROOT_PASSWORD' ]
+      timeout: 5s
+      retries: 5
+
+  haproxy:
+    environment:
+      - CERT1=lb.futblog.me
+      - EMAIL=gjgg0001@ce.pucmm.edu.do
+      - STAGING=false
+    volumes:
+      - ./haproxy/haproxy.cfg:/etc/haproxy/haproxy.cfg
+    links:
+      - weba
+      - webb
+      - webc
+    networks:
+      - red-app
+    ports:
+      - '80:80'
+      - '443:443'
+    image: 'ghcr.io/tomdess/docker-haproxy-certbot:master'
+
+networks:  
+  red-app:   
+
+volumes: 
+  mi-volumen-bd:
