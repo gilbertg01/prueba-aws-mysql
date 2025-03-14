@@ -1,23 +1,23 @@
 services:
-  weba:       
-    image: gilbertg01/practica-6:latest
-    env_file: 
+  weba:
+    image: gilbertg01/practica-6-mysql:latest
+    env_file:
       - .env
-    environment:    
+    environment:
       - NOMBRE_APP=$AMBIENTE
       - server.port=8080
     expose:
       - 8080
     restart: always
-    networks:   
+    networks:
       - red-app
-    depends_on:  
+    depends_on:
       practica-6-db:
         condition: service_healthy
 
-  webb: 
-    image: gilbertg01/practica-6:latest
-    env_file: 
+  webb:
+    image: gilbertg01/practica-6-mysql:latest
+    env_file:
       - .env
     environment:
       - NOMBRE_APP=$AMBIENTE
@@ -25,15 +25,15 @@ services:
     expose:
       - 8081
     restart: always
-    networks: 
+    networks:
       - red-app
     depends_on:
       practica-6-db:
         condition: service_healthy
 
-  webc: 
-    image: gilbertg01/practica-6:latest
-    env_file: 
+  webc:
+    image: gilbertg01/practica-6-mysql:latest
+    env_file:
       - .env
     environment: 
       - NOMBRE_APP=$AMBIENTE
@@ -57,7 +57,7 @@ services:
       - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
       - MYSQL_USER=$DB_USER
       - MYSQL_DATABASE=$DB_NAME
-    volumes:   
+    volumes:
       - mi-volumen-bd:${DB_UBI}
     networks:
       - red-app
