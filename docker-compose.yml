@@ -56,6 +56,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
       - MYSQL_USER=$DB_USER
+      - MYSQL_PASSWORD=$DB_PASSWORD
       - MYSQL_DATABASE=$DB_NAME
     volumes:
       - mi-volumen-bd:${DB_UBI}
