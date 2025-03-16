@@ -68,7 +68,7 @@ services:
 
   haproxy:
     environment:
-      - CERT1=lb.futblog.me
+      - CERT1=app.futblog.me
       - EMAIL=gjgg0001@ce.pucmm.edu.do
       - STAGING=false
     volumes:
